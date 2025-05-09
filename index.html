@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Я вижу тебя</title>
+    <style>
+        body {
+            background-color: black;
+            color: lime;
+            font-family: monospace;
+            padding: 20px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background: lime;
+            color: black;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Подключение к твоему устройству...</h1>
+    <p>Анализ сигнала...</p>
+    <p>Получение координат...</p>
+    <button onclick="getLocation()">Сканировать</button>
+    <p id="result"></p>
+
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                document.getElementById("result").innerText = "Геолокация не поддерживается.";
+            }
+        }
+
+        function showPosition(position) {
+            const lat = position.coords.latitude.toFixed(4);
+            const lon = position.coords.longitude.toFixed(4);
+            document.getElementById("result").innerHTML = 
+                `Ты находишься примерно здесь: <br>Широта: ${lat}, Долгота: ${lon}<br>
+                <a href="https://www.google.com/maps?q=${lat},${lon}" target="_blank">Открыть в Google Maps</a>`;
+        }
+    </script>
+</body>
+</html>
